@@ -80,7 +80,7 @@ var commands = {
         let recallTime = config["recall-time"]
         let { message_id } = await (
             event.reply([
-                `〓 ${plugin.name} by ${await (await plugin.bot.getStrangerInfo(plugin.mainAdmin)).nickname} 〓`,
+                `〓 ${plugin.name} by ${await (await plugin.bot.getStrangerInfo(plugin.mainAdmin)).nickname} 〓\n`,
                 recallTime >= 0 ? `将在 ${recallTime} 秒后撤回` : '',
                 qimage,
             ])
