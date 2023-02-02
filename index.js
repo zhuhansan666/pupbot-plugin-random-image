@@ -54,7 +54,7 @@ var tools = {
 var commands = {
     _recall: async function(startDate, message_id, recallTime) {
         while (true) {
-            let deltaTime = new Date().getTime() - startDate.getTime() - 100 // 多减 100ms 避免撤回超时
+            let deltaTime = new Date().getTime() - startDate.getTime() - 0.1 // 多减 0.1s 避免撤回超时
             if (deltaTime >= recallTime * 1000 || deltaTime < 0) { // 到达撤回时间
                 plugin.bot.deleteMsg(message_id)
                 break
