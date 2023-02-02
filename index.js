@@ -52,15 +52,6 @@ var tools = {
 }
 
 var commands = {
-    _recall: async function(startDate, message_id, recallTime) {
-        while (true) {
-            let deltaTime = new Date().getTime() - startDate.getTime() - 0.1 // 多减 0.1s 避免撤回超时
-            if (deltaTime >= recallTime * 1000 || deltaTime < 0) { // 到达撤回时间
-                plugin.bot.deleteMsg(message_id)
-                break
-            }
-        }
-    },
     randomImage: async function(event, params, plugin) {
         let senderid = event.sender.user_id
         let permission = config["use-permisson"].toLowerCase()
@@ -75,7 +66,6 @@ var commands = {
         let apis = config["random-api"]
         let api = apis[Math.round(Math.random() * (apis.length - 1))]
         let qimage = segment.image(api) // 适用于QQ的图片object
-        console.log(JSON.stringify(qimage))
 
         let recallTime = config["recall-time"]
         let { message_id } = await (
@@ -85,13 +75,12 @@ var commands = {
                 qimage,
             ])
         ) // 发送消息
-        let startDate = new Date()
 
         if (recallTime < 0) { // -1直接退出
             return
         }
 
-        commands._recall(startDate, message_id, recallTime) // 异步延时撤回
+        setTimeout(() => { plugin.bot.deleteMsg(message_id) }, (recallTime * 1000 - 100)) // 异步延时撤回
     }
 }
 

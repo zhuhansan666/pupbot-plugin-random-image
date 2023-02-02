@@ -1,6 +1,6 @@
 {
     "name": "pupbot-plugin-random-image",
-    "version": "0.0.3",
+    "version": "0.1.0",
     "description": "二次元图片随机发送",
     "main": "index.js",
     "scripts": {
