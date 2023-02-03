@@ -8,15 +8,26 @@ const botRoot = path.join(PluginDataDir, "../../") // 机器人根目录
 const authorQQ = 3088420339
 
 const config = {
+    'cd': 0,
+    'cdmod': 'wait',
+    'cdstring': '太...太快了',
     'use-permisson': 'admins',
     'recall-time': 90,
     'random-api': [
         'http://www.dmoe.cc/random.php',
-        'http://img.xjh.me/random_img.php?return=302'
+        'http://img.xjh.me/random_img.php?return=302',
+        'https://api.vvhan.com/api/acgimg',
+        'https://api.yimian.xyz/img',
+
     ],
     'command': [
         '来张图'
     ]
+}
+
+const cdtimes = {
+    group: {},
+    private: {}
 }
 
 async function hooker(event, params, plugin, func, args) {
@@ -52,8 +63,52 @@ var tools = {
 }
 
 var commands = {
+    _setStartTime: function(event, key, value) {
+        if (event.message_type == 'group') {
+            cdtimes.group[key] = value
+        } else {
+            cdtimes.private[key] = value
+        }
+    },
+    _checkCdTime: function(event, id) {
+        let lastTime = -1
+        let residue = null
+
+        if (event.message_type == 'group') {
+            lastTime = cdtimes.group[id]
+            console.log(lastTime)
+            lastTime = lastTime == undefined ? 0 : lastTime
+            residue = (new Date().getTime() - lastTime) / 1000
+            if (lastTime >= 0 && residue > config.cd * 1000) {
+                return [true, 0]
+            }
+        } else {
+            lastTime = cdtimes.private[id]
+            console.log(lastTime)
+            lastTime = lastTime == undefined ? 0 : lastTime
+            residue = (new Date().getTime() - lastTime) / 1000
+            if (lastTime >= 0 && residue > config.cd) {
+                return [true, 0]
+            }
+        }
+
+        return [false, lastTime >= 0 ? residue : '无限(我还没来得及撤回捏)']
+    },
     randomImage: async function(event, params, plugin) {
+        plugin.saveConfig(Object.assign(config, plugin.loadConfig()))
+
         let senderid = event.sender.user_id
+        let id = event.message_type == 'group' ? event.group_id : senderid
+
+        let [cdOver, residue] = commands._checkCdTime(event, id)
+        if (!cdOver) { // 此会话还在cd
+            event.reply([
+                `〓 ${plugin.name} by ${await (await plugin.bot.getStrangerInfo(plugin.mainAdmin)).nickname} 〓\n`,
+                config.cdstring.replace('{time}', residue)
+            ], true)
+            return
+        }
+
         let permission = config["use-permisson"].toLowerCase()
         if (permission == 'mainadmin' && senderid != plugin.bot.mainAdmin) {
             // 如果是仅主管理员模式 且 不是主管理员直接退出
@@ -73,14 +128,29 @@ var commands = {
                 `〓 ${plugin.name} by ${await (await plugin.bot.getStrangerInfo(plugin.mainAdmin)).nickname} 〓\n`,
                 recallTime >= 0 ? `将在 ${recallTime} 秒后撤回` : '',
                 qimage,
-            ])
+            ], true)
         ) // 发送消息
+
+        if (config.cdmod == 'wait') {
+            commands._setStartTime(event, id, -1) // 发送设置时间(-1代表等待)
+        } else {
+            commands._setStartTime(event, id, new Date().getTime())
+        }
 
         if (recallTime < 0) { // -1直接退出
             return
         }
 
-        setTimeout(() => { plugin.bot.deleteMsg(message_id) }, (recallTime * 1000 - 100)) // 异步延时撤回
+        if (config.cdmod == 'wait') {
+            setTimeout(() => {
+                    commands._setStartTime(event, id, new Date().getTime()) // 发送设置时间
+                    plugin.bot.deleteMsg(message_id)
+                }, (recallTime * 1000 - 100)) // 异步延时撤回
+        } else {
+            setTimeout(() => {
+                    plugin.bot.deleteMsg(message_id)
+                }, (recallTime * 1000 - 100)) // 异步延时撤回
+        }
     }
 }
 
