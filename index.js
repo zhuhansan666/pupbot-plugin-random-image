@@ -10,7 +10,7 @@ const authorQQ = 3088420339
 const config = {
     'cd': 0,
     'cdmod': 'wait',
-    'cdstring': '太...太快了',
+    'cdstring': '太...太快啦! 等我{time}秒行不行?AwQ',
     'use-permisson': 'admins',
     'recall-time': 90,
     'random-api': [
@@ -76,7 +76,6 @@ var commands = {
 
         if (event.message_type == 'group') {
             lastTime = cdtimes.group[id]
-            console.log(lastTime)
             lastTime = lastTime == undefined ? 0 : lastTime
             residue = (new Date().getTime() - lastTime) / 1000
             if (lastTime >= 0 && residue > config.cd * 1000) {
@@ -84,7 +83,6 @@ var commands = {
             }
         } else {
             lastTime = cdtimes.private[id]
-            console.log(lastTime)
             lastTime = lastTime == undefined ? 0 : lastTime
             residue = (new Date().getTime() - lastTime) / 1000
             if (lastTime >= 0 && residue > config.cd) {
@@ -92,7 +90,7 @@ var commands = {
             }
         }
 
-        return [false, lastTime >= 0 ? residue : '无限(我还没来得及撤回捏)']
+        return [false, lastTime >= 0 ? residue : config['recall-time'] + config.cd]
     },
     randomImage: async function(event, params, plugin) {
         plugin.saveConfig(Object.assign(config, plugin.loadConfig()))
