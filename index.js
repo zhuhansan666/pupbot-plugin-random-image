@@ -77,15 +77,15 @@ var commands = {
         if (event.message_type == 'group') {
             lastTime = cdtimes.group[id]
             lastTime = lastTime == undefined ? 0 : lastTime
-            residue = (new Date().getTime() - lastTime) / 1000
-            if (lastTime >= 0 && residue > config.cd * 1000) {
+            residue = config.cd - (new Date().getTime() - lastTime) / 1000
+            if (lastTime >= 0 && residue <= 0) {
                 return [true, 0]
             }
         } else {
             lastTime = cdtimes.private[id]
             lastTime = lastTime == undefined ? 0 : lastTime
-            residue = (new Date().getTime() - lastTime) / 1000
-            if (lastTime >= 0 && residue > config.cd) {
+            residue = config.cd - (new Date().getTime() - lastTime) / 1000
+            if (lastTime >= 0 && residue <= 0) {
                 return [true, 0]
             }
         }
