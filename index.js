@@ -19,6 +19,16 @@ const config = {
         'https://api.vvhan.com/api/acgimg',
         'https://api.yimian.xyz/img',
         'https://api.anosu.top/api',
+        'https://api.ixiaowai.cn/api/api.php',
+        'http://www.dmoe.cc/random.php',
+        'http://api.btstu.cn/sjbz/?lx=suiji',
+        "http://api.btstu.cn/sjbz/?lx=meizi",
+        "http://api.btstu.cn/sjbz/?lx=m_meizi",
+        "https://api.ixiaowai.cn/api/api2.php",
+        "https://api.r10086.com/img-api.php?type=动漫综合1",
+        "https://api.paugram.com/wallpaper",
+        "https://img.paulzzh.tech/touhou/random",
+        "https://api.dujin.org/pic/yuanshen/",
     ],
     'command': [
         '来张图'

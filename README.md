@@ -1,4 +1,4 @@
-## 二次元图片随机发送 | pupbot-plugin-random-image
+## 二次元/三次元美图随机发送 | pupbot-plugin-random-image
 
 ## 安装
 ```
@@ -35,11 +35,8 @@
     // *时间可能比实际略短, 因为获取图片需要时间
     'recall-time': 90,
 
-    // api 数组, api 应当直接跳转图片直链 (#默认如下)
-    'random-api': [  
-        'http://www.dmoe.cc/random.php',
-        'http://img.xjh.me/random_img.php?return=302'
-    ],
+    // api 数组, api 应当直接跳转图片直链 (#默认详解配置文件)
+    'random-api': [],
     
     // 触发词 (#默认如下)
     'command': [  
@@ -57,3 +54,5 @@
 * V0.1.2 新增cd时间显示适配撤回时间 | 2023-02-03 21:53:40
 * V0.1.3 修复 剩余时间算法错误 的问题 | 2023-02-04 13:02:12
 * V0.1.4 修复bug | 2023-02-04 14:24:20
+* V0.1.5 新增多个图片api | 2023-02-04 18:28:11
+
