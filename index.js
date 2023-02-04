@@ -18,7 +18,7 @@ const config = {
         'http://img.xjh.me/random_img.php?return=302',
         'https://api.vvhan.com/api/acgimg',
         'https://api.yimian.xyz/img',
-
+        'https://api.anosu.top/api',
     ],
     'command': [
         '来张图'
@@ -90,7 +90,7 @@ var commands = {
             }
         }
 
-        return [false, lastTime >= 0 ? residue : config['recall-time'] + config.cd]
+        return [false, lastTime >= 0 ? Math.ceil(residue) : Math.ceil(config['recall-time'] + config.cd)]
     },
     randomImage: async function(event, params, plugin) {
         plugin.saveConfig(Object.assign(config, plugin.loadConfig()))
