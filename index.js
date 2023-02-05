@@ -131,6 +131,13 @@ var commands = {
         let qimage = segment.image(api) // 适用于QQ的图片object
 
         let recallTime = config["recall-time"]
+
+        if (config.cdmod == 'wait') {
+            commands._setStartTime(event, id, -1) // 发送设置时间(-1代表等待)
+        } else {
+            commands._setStartTime(event, id, new Date().getTime())
+        }
+
         let { message_id } = await (
             event.reply([
                 `〓 ${plugin.name} by ${await (await plugin.bot.getStrangerInfo(plugin.mainAdmin)).nickname} 〓\n`,
@@ -138,12 +145,6 @@ var commands = {
                 qimage,
             ], true)
         ) // 发送消息
-
-        if (config.cdmod == 'wait') {
-            commands._setStartTime(event, id, -1) // 发送设置时间(-1代表等待)
-        } else {
-            commands._setStartTime(event, id, new Date().getTime())
-        }
 
         if (recallTime < 0) { // -1直接退出
             return
